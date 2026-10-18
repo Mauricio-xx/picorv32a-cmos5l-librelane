@@ -11,7 +11,7 @@ You need Nix with flakes enabled.
 ./run.sh sim    # RTL simulation (optional)
 ```
 
-The first run downloads the tools and the PDK into `./pdk`. Results go to `librelane/runs/<timestamp>/`. LVS is clean when the Netgen report (`*-netgen-lvs/reports/lvs.netgen.rpt`) says `Final result: Circuits match uniquely.`.
+The first run downloads the tools and the PDK into `./pdk`. Results go to `librelane/runs/<timestamp>/`. LVS is clean when the Netgen report (`*-netgen-lvs/reports/lvs.netgen.rpt`) says `Final result: Circuits match uniquely.`
 
 ## Files
 
