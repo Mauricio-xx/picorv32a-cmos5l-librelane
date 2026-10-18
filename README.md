@@ -1,8 +1,12 @@
-# PicoRV32 full chip, Magic + Netgen LVS (ihp-sg13cmos5l)
+# PicoRV32 full chip on ihp-sg13cmos5l with LibreLane
 
-This is the PicoRV32 full-chip example (pad ring, bondpads, core power ring, seal ring) run through the stock LVS of the [IHP LibreLane template](https://github.com/IHP-GmbH/ihp-sg13-librelane-template): `Magic.SpiceExtraction`, then `Netgen.LVS`, then `Checker.LVS`, all with LibreLane defaults. It shows what a template user gets today on ihp-sg13cmos5l: a clean LVS where the IO cells are black boxes. Read the last section before quoting the pass.
+This is what a full-chip ihp-sg13cmos5l project looks like in LibreLane today. It follows the [IHP LibreLane template](https://github.com/IHP-GmbH/ihp-sg13-librelane-template): a PicoRV32 core with a pad ring, bondpads, core power ring and seal ring, taken through RTL to GDS and LVS with the `Chip` flow. The LVS is the LibreLane default, Magic extraction plus Netgen, and it comes out clean. Read the last section before quoting that pass.
 
-The core is PicoRV32 (`src/picorv32a.v`, ISC license in its header) with a small fixed-program ROM. The pad wrapper, SDC, testbench and `bondpad_70x70_5L` (`ip/`, see `ip/LICENSE`) come from the picorv32a_fullchip KLayout LVS testcase in ihp-librelane-testcases. None of its KLayout LVS pieces are used here. Everything else is Apache-2.0 (`LICENSE`).
+The core is PicoRV32 (`src/picorv32a.v`, ISC license in its header) with a small fixed-program ROM. Everything else is Apache-2.0 (`LICENSE`, and `ip/LICENSE` for the bondpad).
+
+## Layout of the project
+
+If you come from ORFS, `librelane/config.yaml` plays the role of `config.mk`, and the flake pins every tool the way an ORFS docker image would. The IO cells are instantiated in RTL (`src/chip_top.sv`, which wraps `src/chip_core.sv`). The config only lists the pad instances per side (`PAD_SOUTH`, `PAD_EAST`, `PAD_NORTH`, `PAD_WEST`). LibreLane then builds the ring, places the bondpads (`PAD_BONDPAD_NAME`, with GDS and LEF in `ip/`) and connects the core ring to the supply pads (`PDN_CORE_RING_CONNECT_TO_PADS`). The SDC is `librelane/chip_top.sdc`, and the testbench is `sim/chip_top_tb.sv`.
 
 ## Run it
 
@@ -44,6 +48,10 @@ design__lvs_unmatched_pin__count 0
 The Netgen report is `librelane/runs/<tag>/*-netgen-lvs/reports/lvs.netgen.rpt`.
 
 DRC, antenna and density signoff are switched off in `librelane/config.yaml` (`Magic.DRC`, `KLayout.DRC`, `KLayout.Antenna`, `KLayout.Density` and their checkers). On the stock template Magic DRC alone reports 9943 errors and stops `make`, so the run would never reach a usable end state. `Checker.IllegalOverlap` is off as in the template. This run says nothing about DRC.
+
+## LVS: why Netgen in black-box mode
+
+LibreLane runs `Magic.SpiceExtraction`, then `Netgen.LVS`, then `Checker.LVS`, and this repo keeps those defaults. LibreLane also has a `KLayout.LVS` step, and the PDK ships a KLayout LVS deck. A device-level KLayout LVS of this chip does not pass today, because the IO cell layouts and their schematic views disagree in several places. Netgen gets a clean result only because it treats the IO cells as black boxes (next section). A KLayout LVS variant of this design is being prepared and may be added here later.
 
 ## What this does NOT check
 
