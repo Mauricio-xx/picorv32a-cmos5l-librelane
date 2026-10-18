@@ -1,6 +1,4 @@
-# Full-chip Magic + Netgen LVS testcase for ihp-sg13cmos5l.
-# Stock ihp-sg13-librelane-template flow (Chip): Magic.SpiceExtraction from
-# DEF/LEF, Netgen.LVS (always -blackbox in LibreLane), Checker.LVS.
+# PicoRV32 full chip on ihp-sg13cmos5l, based on the IHP LibreLane template.
 meta:
   version: 3
   flow: Chip
