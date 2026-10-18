@@ -1,0 +1,65 @@
+# Full-chip Magic + Netgen LVS testcase for ihp-sg13cmos5l.
+# Stock ihp-sg13-librelane-template flow (Chip): Magic.SpiceExtraction from
+# DEF/LEF, Netgen.LVS (always -blackbox in LibreLane), Checker.LVS.
+meta:
+  version: 3
+  flow: Chip
+  substituting_steps:
+    # Same as the template: Magic reports overlaps which can be ignored.
+    Checker.IllegalOverlap: null
+    # This testcase checks LVS only. DRC, antenna and density signoff are off
+    # so the run finishes (Magic DRC alone reports thousands of errors).
+    Magic.DRC: null
+    Checker.MagicDRC: null
+    KLayout.DRC: null
+    Checker.KLayoutDRC: null
+    KLayout.Antenna: null
+    Checker.KLayoutAntenna: null
+    KLayout.Density: null
+    Checker.KLayoutDensity: null
+
+DESIGN_NAME: chip_top
+VERILOG_FILES:
+  - dir::../src/chip_top.sv
+  - dir::../src/chip_core.sv
+  - dir::../src/picorv32a.v
+VERILOG_DEFINES: [FUNCTIONAL]
+PRIMARY_GDSII_STREAMOUT_TOOL: klayout
+
+PAD_SOUTH: [clk_pad, rst_n_pad, "inputs\\[0\\].input_pad", "inputs\\[1\\].input_pad", "inputs\\[2\\].input_pad", "inputs\\[3\\].input_pad", "vdd_pads\\[0\\].vdd_pad", "vss_pads\\[0\\].vss_pad"]
+PAD_EAST: ["inputs\\[4\\].input_pad", "inputs\\[5\\].input_pad", "inputs\\[6\\].input_pad", "inputs\\[7\\].input_pad", "bidirs\\[0\\].bidir_pad", "bidirs\\[1\\].bidir_pad", "bidirs\\[2\\].bidir_pad", "bidirs\\[3\\].bidir_pad"]
+PAD_NORTH: ["outputs\\[7\\].output_pad", "outputs\\[6\\].output_pad", "outputs\\[5\\].output_pad", "outputs\\[4\\].output_pad", "outputs\\[3\\].output_pad", "outputs\\[2\\].output_pad", "outputs\\[1\\].output_pad", "outputs\\[0\\].output_pad"]
+PAD_WEST: ["bidirs\\[7\\].bidir_pad", "bidirs\\[6\\].bidir_pad", "bidirs\\[5\\].bidir_pad", "bidirs\\[4\\].bidir_pad", "iovdd_pads\\[0\\].iovdd_pad", "iovss_pads\\[0\\].iovss_pad"]
+
+PNR_SDC_FILE: dir::chip_top.sdc
+SIGNOFF_SDC_FILE: dir::chip_top.sdc
+FALLBACK_SDC: dir::chip_top.sdc
+VDD_NETS: [VDD]
+GND_NETS: [VSS]
+CLOCK_PORT: clk_PAD
+CLOCK_NET: clk_pad/p2c
+CLOCK_PERIOD: 100
+
+FP_SIZING: absolute
+# Smallest square above the template 1600 um that places 8/8/8/6 pads on the 1 um IO site.
+DIE_AREA: [0, 0, 1603, 1603]
+CORE_AREA: [365, 365, 1235, 1235]
+OPENROAD_THREADS: 4
+PL_TARGET_DENSITY_PCT: 35
+GRT_ALLOW_CONGESTION: false
+RT_MAX_LAYER: TopMetal1
+PDN_CORE_RING: true
+PDN_CORE_RING_VWIDTH: 15
+PDN_CORE_RING_HWIDTH: 15
+PDN_CORE_RING_VSPACING: 5
+PDN_CORE_RING_HSPACING: 5
+PDN_CORE_RING_CONNECT_TO_PADS: true
+PDN_ENABLE_PINS: false
+PAD_BONDPAD_NAME: bondpad_70x70_5L
+EXTRA_GDS: [dir::../ip/bondpad_70x70/gds/bondpad_70x70_5L.gds]
+EXTRA_LEFS: [dir::../ip/bondpad_70x70/lef/bondpad_70x70_5L.lef]
+IGNORE_DISCONNECTED_MODULES: [bondpad_70x70_5L]
+
+# Same as the template. LVS uses the defaults otherwise: MAGIC_EXT_USE_GDS is
+# false, so every IO cell, std cell and bondpad is extracted from its LEF.
+MAGIC_EXT_UNIQUE: notopports
