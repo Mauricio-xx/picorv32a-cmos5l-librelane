@@ -34,6 +34,12 @@ LibreLane's default LVS is Magic extraction plus Netgen, and Netgen always runs 
 PDK_ROOT=<pdk> ./lvs.sh chip_top 6_final.def chip_top.pnl.v [extra LEFs, e.g. bondpads]
 ```
 
+If the layout is already extracted with Magic, skip the extraction and only compare:
+
+```bash
+PDK_ROOT=<pdk> ./lvs.sh --no-extract chip_top chip_top.spice chip_top.pnl.v
+```
+
 The netlist must include power pins. In OpenROAD: `read_db 6_final.odb` then `write_verilog -include_pwr_gnd chip_top.pnl.v`. On this design it gives the same extracted netlist and result as LibreLane.
 
 ## About DRC
