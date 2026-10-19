@@ -5,16 +5,9 @@ meta:
   substituting_steps:
     # Same as the template: Magic reports overlaps which can be ignored.
     Checker.IllegalOverlap: null
-    # This testcase checks LVS only. DRC, antenna and density signoff are off
-    # so the run finishes (Magic DRC alone reports thousands of errors).
+    # DRC signoff is KLayout (the IHP rule deck). Magic DRC is off.
     Magic.DRC: null
     Checker.MagicDRC: null
-    KLayout.DRC: null
-    Checker.KLayoutDRC: null
-    KLayout.Antenna: null
-    Checker.KLayoutAntenna: null
-    KLayout.Density: null
-    Checker.KLayoutDensity: null
 
 DESIGN_NAME: chip_top
 VERILOG_FILES:

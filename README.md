@@ -7,7 +7,7 @@ A small full-chip example: a PicoRV32 core with pad ring, bondpads, power ring a
 You need Nix with flakes enabled.
 
 ```bash
-./run.sh        # full flow, about 15 minutes
+./run.sh        # full flow, about 20 minutes
 ./run.sh sim    # RTL simulation (optional)
 ```
 
@@ -26,4 +26,6 @@ The first run downloads the tools and the PDK into `./pdk`. Results go to `libre
 
 LibreLane's default LVS is Magic extraction plus Netgen, and Netgen always runs in black-box mode. So the IO cells (and standard cells) are compared by their pins only, and the pass means the wiring between cells is right. It does not check inside the IO cells. A device-level LVS of the IO cells, with KLayout or with Netgen, does not pass today because the PDK's IO layouts and netlists still disagree.
 
-DRC, antenna and density checks are turned off in `config.yaml` so the flow finishes. With them on, Magic DRC reports thousands of errors. This example says nothing about DRC.
+## About DRC
+
+DRC, antenna and density are checked with KLayout and the IHP rule deck, and all three are clean (`*-klayout-drc`, `*-klayout-antenna`, `*-klayout-density`). Magic DRC is turned off in `config.yaml`; KLayout is the signoff DRC for this PDK.
