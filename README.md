@@ -26,6 +26,16 @@ The first run downloads the tools and the PDK into `./pdk`. Results go to `libre
 
 LibreLane's default LVS is Magic extraction plus Netgen, and Netgen always runs in black-box mode. So the IO cells (and standard cells) are compared by their pins only, and the pass means the wiring between cells is right. It does not check inside the IO cells. A device-level LVS of the IO cells, with KLayout or with Netgen, does not pass today because the PDK's IO layouts and netlists still disagree.
 
+## LVS without LibreLane
+
+`lvs.sh` runs the same Magic + Netgen black-box LVS by hand, for example on ORFS results. It needs `magic`, `netgen` and `PDK_ROOT`:
+
+```bash
+PDK_ROOT=<pdk> ./lvs.sh chip_top 6_final.def chip_top.pnl.v [extra LEFs, e.g. bondpads]
+```
+
+The netlist must include power pins. In OpenROAD: `read_db 6_final.odb` then `write_verilog -include_pwr_gnd chip_top.pnl.v`. On this design it gives the same extracted netlist and result as LibreLane.
+
 ## About DRC
 
 DRC, antenna and density are checked with KLayout and the IHP rule deck, and all three are clean (`*-klayout-drc`, `*-klayout-antenna`, `*-klayout-density`). Magic DRC is turned off in `config.yaml`; KLayout is the signoff DRC for this PDK.

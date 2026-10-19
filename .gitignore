@@ -1,3 +1,4 @@
 pdk/
 librelane/runs/
 *.vvp
+lvs_out/
