@@ -16,6 +16,9 @@ VERILOG_FILES:
   - dir::../src/picorv32a.v
 VERILOG_DEFINES: [FUNCTIONAL]
 PRIMARY_GDSII_STREAMOUT_TOOL: klayout
+# DRC options from the PDK, repeated here for LibreLane 3.1.0.dev3 (pip/Docker),
+# which does not read them from the PDK. "TRUE" must stay in caps and quotes.
+KLAYOUT_DRC_OPTIONS: {no_recommended: "TRUE", run_mode: deep}
 
 PAD_SOUTH: [clk_pad, rst_n_pad, "inputs\\[0\\].input_pad", "inputs\\[1\\].input_pad", "inputs\\[2\\].input_pad", "inputs\\[3\\].input_pad", "vdd_pads\\[0\\].vdd_pad", "vss_pads\\[0\\].vss_pad"]
 PAD_EAST: ["inputs\\[4\\].input_pad", "inputs\\[5\\].input_pad", "inputs\\[6\\].input_pad", "inputs\\[7\\].input_pad", "bidirs\\[0\\].bidir_pad", "bidirs\\[1\\].bidir_pad", "bidirs\\[2\\].bidir_pad", "bidirs\\[3\\].bidir_pad"]

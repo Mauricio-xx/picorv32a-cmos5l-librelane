@@ -13,6 +13,13 @@ You need Nix with flakes enabled.
 
 The first run downloads the tools and the PDK into `./pdk`. Results go to `librelane/runs/<timestamp>/`. LVS is clean when the Netgen report (`*-netgen-lvs/reports/lvs.netgen.rpt`) says `Final result: Circuits match uniquely.`
 
+Without Nix, use pip and Docker. The stable LibreLane (3.0.x) does not work with cmos5l yet, so install the dev release, and use a recent IHP-Open-PDK dev checkout (tested at 89d42ee6):
+
+```bash
+python3 -m pip install librelane==3.1.0.dev3
+python3 -m librelane --dockerized librelane/config.yaml --pdk ihp-sg13cmos5l --pdk-root /path/to/IHP-Open-PDK --manual-pdk
+```
+
 ## Files
 
 - `src/`: RTL. `chip_top.sv` instantiates the IO pads and wraps the core in `chip_core.sv`.
